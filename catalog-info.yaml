@@ -1,0 +1,21 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: tkn-go-github-test-4-gitops
+  description: This is GitOps manifest for tkn-go-github-test-4   
+  links:
+    - url: https://www.redhat.com/en/solutions/trusted-software-supply-chain
+      title: Trusted Secure Supply Chain 
+      icon: dashboard
+      type: admin-dashboard
+  annotations:    
+    argocd/app-name: tkn-go-github-test-4
+    backstage.io/kubernetes-id: tkn-go-github-test-4 
+    backstage.io/techdocs-ref: dir:. 
+    janus-idp.io/tekton: tkn-go-github-test-4   
+spec:
+  type: gitops
+  owner: user:guest 
+  lifecycle: experimental
+  dependsOn:
+    - component:tkn-go-github-test-4

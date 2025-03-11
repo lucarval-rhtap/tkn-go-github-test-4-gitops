@@ -1,0 +1,6 @@
+apiVersion: "pipelinesascode.tekton.dev/v1alpha1"
+kind: Repository
+metadata:
+  name: tkn-go-github-test-4-repository
+spec:
+  url: https://github.com/lucarval-rhtap/tkn-go-github-test-4
