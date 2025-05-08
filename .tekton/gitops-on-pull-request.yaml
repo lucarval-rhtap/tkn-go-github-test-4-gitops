@@ -18,6 +18,9 @@ metadata:
     backstage.io/kubernetes-id: tkn-go-github-test-4
     backstage.io/kubernetes-namespace: rhtap-app
     app.kubernetes.io/part-of: tkn-go-github-test-4
+    appstudio.openshift.io/application: tkn-go-github-test-4
+    appstudio.openshift.io/component: tkn-go-github-test-4-gitops
+    pipelines.appstudio.openshift.io/type: test
 spec:
   params:
     - name: git-url
