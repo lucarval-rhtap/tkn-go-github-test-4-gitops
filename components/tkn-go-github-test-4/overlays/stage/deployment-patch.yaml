@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata:   
-  annotations:  
+metadata:
+  annotations:
     tad.gitops.set/image: ".spec.template.spec.containers[0].image"
     tad.gitops.get/image: ".spec.template.spec.containers[0].image"
     tad.gitops.set/replicas: ".spec.replicas"
-    tad.gitops.get/replicas: ".spec.replicas" 
+    tad.gitops.get/replicas: ".spec.replicas"
   name: tkn-go-github-test-4
 spec:
-  replicas: 1 
-  template: 
+  replicas: 1
+  template:
     spec:
       containers:
-      - image: quay.io/redhat-appstudio/dance-bootstrap-app:latest
-        name: container-image  
+      - image: quay.io/redhat-user-workloads/lucarval-tenant/tkn-go-github-test-4:110f6d280b3a058489243701f8d3fd8f2ef42d10@sha256:b8a1977dbd0eeaa1904f6b1645d72fcd3a88ad292fc7e43bbbd5b3e531b4a058
+        name: container-image
