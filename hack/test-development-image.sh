@@ -72,3 +72,10 @@ cosign attest --predicate predicate.json \
     --key "${COSIGN_PRIVATE_KEY_FILE}" \
     --yes \
     "${IMAGE}"
+
+echo 'Image attested successfully!'
+
+if [[ -f "$COSIGN_PUBLIC_KEY_FILE" ]]; then
+    echo 'For verification, use the following public key:'
+    cat "$COSIGN_PUBLIC_KEY_FILE"
+fi
