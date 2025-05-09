@@ -12,5 +12,5 @@ spec:
   template:
     spec:
       containers:
-        - image: quay.io/redhat-user-workloads/lucarval-tenant/tkn-go-github-test-4:110f6d280b3a058489243701f8d3fd8f2ef42d10@sha256:b8a1977dbd0eeaa1904f6b1645d72fcd3a88ad292fc7e43bbbd5b3e531b4a058
+        - image: quay.io/redhat-user-workloads/lucarval-tenant/tkn-go-github-test-4:0d9ff4b327fe45777b3865b29dce13380cca320d@sha256:c67c958002104dc77ec5b157755c171b14194175d6cb1127beb4580c6063afb4
           name: container-image
