@@ -1,0 +1,49 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: testing-development
+spec:
+  params:
+  - description: Gitops repo url
+    name: git-url
+    type: string
+  - default: ""
+    description: Gitops repo revision
+    name: revision
+    type: string
+  tasks:
+  - name: clone-repository
+    params:
+    - name: url
+      value: $(params.git-url)
+    - name: revision
+      value: $(params.revision)
+    - name: fetchTags
+      value: "true"
+    taskRef:
+      name: git-clone
+    workspaces:
+    - name: output
+      workspace: workspace
+    - name: basic-auth
+      workspace: git-auth
+
+  - name: test-image
+    runAfter:
+    - clone-repository
+    params: []
+    workspaces:
+    - name: source
+      workspace: workspace
+    taskSpec:
+      params: []
+      stepTemplate:
+        env:
+        - name: HOME
+          value: /tekton/home
+      steps:
+      - command:
+        - ./hack/test-development-image.sh
+        image: registry.access.redhat.com/rhtap-task-runner/rhtap-task-runner-rhel9:1.5
+        name: test
+        workingDir: $(workspaces.source.path)/source

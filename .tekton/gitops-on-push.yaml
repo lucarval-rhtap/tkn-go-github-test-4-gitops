@@ -1,0 +1,37 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: tkn-go-github-test-4-gitops-on-push
+  annotations:
+    pipelinesascode.tekton.dev/on-event: "[push]"
+    pipelinesascode.tekton.dev/on-target-branch: "[main]"
+    pipelinesascode.tekton.dev/task-0: "https://raw.githubusercontent.com/redhat-appstudio/tssc-sample-pipelines/v1.4.x/pac/tasks/git-clone.yaml"
+  labels:
+    argocd/app-name: tkn-go-github-test-4
+    janus-idp.io/tekton: tkn-go-github-test-4
+    backstage.io/kubernetes-id: tkn-go-github-test-4
+    backstage.io/kubernetes-namespace: rhtap-app
+    app.kubernetes.io/part-of: tkn-go-github-test-4
+    appstudio.openshift.io/application: tkn-go-github-test-4
+    appstudio.openshift.io/component: tkn-go-github-test-4-gitops
+    pipelines.appstudio.openshift.io/type: test
+spec:
+  params:
+    - name: git-url
+      value: '{{repo_url}}'
+    - name: revision
+      value: '{{revision}}'
+  pipelineRef:
+    name: testing-development
+  workspaces:
+    - name: git-auth
+      secret:
+        secretName: "{{ git_auth_secret }}"
+    - name: workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
