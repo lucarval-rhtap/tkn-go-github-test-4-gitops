@@ -36,14 +36,29 @@ spec:
     - name: source
       workspace: workspace
     taskSpec:
-      params: []
+      params:
+      - name: SIGNING_SECRET_NAME
+        descripiton: >
+          Name of the k9s Secret containing the sigstore signing key to be used when creating the
+          test attestation.
+        default: test-signing
+      volumes:
+      - name: signing-key
+        secret:
+          optional: true
+          secretName: $(params.SIGNING_SECRET_NAME)
       stepTemplate:
         env:
         - name: HOME
           value: /tekton/home
+        volumeMounts:
+        - mountPath: /etc/secrets
+          name: signing-key
+          readOnly: true
       steps:
       - command:
         - ./hack/test-development-image.sh
+        - /etc/secrets
         image: registry.access.redhat.com/rhtap-task-runner/rhtap-task-runner-rhel9:1.5
         name: test
         workingDir: $(workspaces.source.path)/source

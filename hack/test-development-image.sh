@@ -22,46 +22,53 @@ echo "Git commit ID: ${GIT_COMMIT}"
 TEST_FILE='hack/test-development-image.sh'
 echo "Test file: ${TEST_FILE}"
 
-# TODO: Perform some tests
+# TODO: Perform some tests here
 
 # https://github.com/in-toto/attestation/blob/main/spec/predicates/test-result.md
-cat >> /dev/stdout <<EOF
+cat >> predicate.json <<EOF
 {
-    "_type": "https://in-toto.io/Statement/v1",
-    "subject": [
-        {
-            "digest": {
-                "gitCommit": "$DIGEST"
-            }
+    "result": "PASSED",
+    "configuration": [{
+        "name": "hack/test-development-image.sh",
+        "downloadLocation": "${GIT_URL}/blob/${GIT_COMMIT}/${TEST_FILE}",
+        "digest": {
+            "gitBlob": "${GIT_COMMIT}"
         }
+    }],
+    "passedTests": [
+        "test 01",
+        "test 02"
     ],
-    "predicateType": "https://in-toto.io/attestation/test-result/v0.1",
-    "predicate": {
-        "result": "PASSED",
-        "configuration": [{
-            "name": "hack/test-development-image.sh",
-            "downloadLocation": "${GIT_URL}/blob/${GIT_COMMIT}/${TEST_FILE}",
-            "digest": {
-                "gitBlob": "${GIT_COMMIT}"
-            }
-        }],
-        "passedTests": [
-            "build (3.7, ubuntu-latest, py)",
-            "build (3.7, macos-latest, py)",
-            "build (3.7, windows-latest, py)",
-            "build (3.8, ubuntu-latest, py)",
-            "build (3.8, macos-latest, py)",
-            "build (3.8, windows-latest, py)",
-            "build (3.9, ubuntu-latest, py)",
-            "build (3.9, macos-latest, py)",
-            "build (3.9, windows-latest, py)",
-            "build (3.10, ubuntu-latest, py)",
-            "build (3.10, macos-latest, py)",
-            "build (3.10, windows-latest, py)",
-            "build (3.x, ubuntu-latest, lint)"
-        ],
-        "warnedTests": [],
-        "failedTests": []
-    }
+    "warnedTests": [],
+    "failedTests": []
 }
 EOF
+
+echo "Predicate:"
+cat predicate.json
+
+SIGNING_DIR="${1-}"
+if [[ ! -n "$SIGNING_DIR" ]]; then
+    echo "Signing directory not provided. Skipping attestation."
+    exit 0
+fi
+
+COSIGN_PASSWORD_FILE="${SIGNING_DIR}/cosign.password"
+COSIGN_PRIVATE_KEY_FILE="${SIGNING_DIR}/cosign.key"
+COSIGN_PUBLIC_KEY_FILE="${SIGNING_DIR}/cosign.pub"
+if [[ ! -f "$COSIGN_PASSWORD_FILE" || ! -f "$COSIGN_PRIVATE_KEY_FILE" ]]; then
+    echo "$COSIGN_PASSWORD_FILE and $COSIGN_PRIVATE_KEY_FILE must both be provided. Skipping attestation."
+    exit 0
+fi
+COSIGN_PASSWORD="$(cat ${COSIGN_PASSWORD_FILE})"
+
+# Needed for the `cosign attest` command.
+export COSIGN_PASSWORD
+
+# TODO: Also add support for custom Rekor instance?
+
+cosign attest --predicate predicate.json \
+    --type 'https://in-toto.io/attestation/test-result/v0.1' \
+    --key "${COSIGN_PRIVATE_KEY_FILE}" \
+    --yes \
+    "${IMAGE}"
