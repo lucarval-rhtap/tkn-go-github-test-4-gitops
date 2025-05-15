@@ -30,6 +30,10 @@ spec:
       value: 'false'
     - name: ec-policy-configuration
       value: '{{repo_url}}?ref={{revision}}'
+    - name: ec-rekor-host
+      value: ''
+    - name: ec-tuf-mirror
+      value: ''
   pipelineRef:
     name: gitops-pull-request
   workspaces:
