@@ -2,11 +2,15 @@ sources:
   - policy:
       - github.com/lcarva/ec-policies//policy/lib?ref=test-results-att
       - github.com/lcarva/ec-policies//policy/release?ref=test-results-att
-    data: []
     ruleData:
       test_result_sigstore_opts:
         ignore_rekor: true
-        public_key: k8s://test-signing
+        public_key: |
+          -----BEGIN PUBLIC KEY-----
+          MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEmQ38dp1kGFpa1uHNuAbUTAPkuaiO
+          G83yZo0+CerCzTKOIk9F37+uWMM4eraJnpIvLIaBhn+TtKTs/91qHRgLcQ==
+          -----END PUBLIC KEY-----
+    config:
       include:
         - '@slsa3'
         - test_results
