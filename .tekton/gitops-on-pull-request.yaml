@@ -34,6 +34,8 @@ spec:
       value: ''
     - name: ec-tuf-mirror
       value: ''
+    - name: ec-public-key
+      value: k8s://openshift-pipelines/public-key
   pipelineRef:
     name: gitops-pull-request
   workspaces:
