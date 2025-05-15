@@ -29,7 +29,7 @@ spec:
     - name: fail-if-trustification-not-configured
       value: 'false'
     - name: ec-policy-configuration
-      value: '{{repo_url}}?ref={{revision}}'
+      value: '{{repo_url}}//ec-policy?ref={{revision}}'
     - name: ec-rekor-host
       value: ''
     - name: ec-tuf-mirror
